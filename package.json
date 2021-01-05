@@ -26,6 +26,7 @@
     "jsonwebtoken": "^8.5.1",
     "moment": "^2.27.0",
     "mongoose": "^5.9.27",
+    "react-dropzone": "^11.2.4",
     "react-redux": "^7.2.1",
     "saslprep": "^1.0.3",
     "supports-color": "^7.1.0"
