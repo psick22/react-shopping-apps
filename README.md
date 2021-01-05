@@ -1,6 +1,33 @@
 # 쇼핑몰 사이트 만들기
 
-- react-boilerplate-v2 이용
+- template : [react-boilerplate-v2](https://github.com/psick22/react-boilerplate-v2) 이용
+
+## 설치 방법
+
+#### (1) root directory에서 Backend dependencies 설치
+
+`$ yarn install`
+
+#### (2) client directory에서 Frontend dependencies 설치
+
+`$ yarn install`
+
+(3) server/config/dev.js 를 생성하고 MongoDB Cluster 정보를 입력
+
+#### <dev.js>
+
+```JavaScript
+module.exports = {
+  mongoURI:
+    "mongodb+srv://<user>:<password>@<clustername>.vbjgi.mongodb.net/<dbname>?retryWrites=true&w=majority",
+};
+```
+
+#### (4) 서버 실행 스크립트 : root directory에서
+
+`$ yarn backend` : server
+`$ yarn frontend` : client
+`$ yarn dev` : server + client
 
 ## Source
 
