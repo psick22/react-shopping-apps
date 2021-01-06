@@ -4,56 +4,43 @@ const router = express.Router();
 const { Product } = require('../models/Product');
 const cloudinary = require('cloudinary').v2;
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
+require('dotenv').config();
 cloudinary.config({
-  cloud_name: 'psick22',
-  api_key: '542886794659432',
-  api_secret: 'l7KU0A7-nJDnQ2Kkg2Li3h3pK9o',
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.API_KEY,
+  api_secret: process.env.API_SECRET,
 });
+
 //=================================
 //             Product
 //=================================
+
 const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
-    folder: 'some-folder-name',
+    folder: 'shopping-app',
     format: 'png',
     public_id: (req, file) => {
       `${Date.now()}_${file.originalname}`;
     },
   },
 });
-// const storage = multer.diskStorage({
-//   destination: function (req, file, cb) {
-//     cb(null, './uploads');
-//   },
-//   filename: function (req, file, cb) {
-//     cb(null, `${Date.now()}_${file.originalName}`);
-//   },
-// });
+
 const upload = multer({ storage: storage }).single('file');
-router.post('/image', upload, function (req, res) {
-  res.json({
-    success: true,
-    fileName: req.file.filename,
-    filePath: req.file.path,
+
+// 이미지 파일 png로
+router.post('/image', (req, res) => {
+  upload(req, res, err => {
+    if (err) {
+      return res.json({ success: false, err });
+    }
+    return res.json({
+      success: true,
+      fileName: res.req.file.filename,
+      filePath: res.req.file.path,
+    });
   });
 });
-
-// router.post('/image', (req, res) => {
-//   // 가져온 이미지 (req) 를 저장
-
-//   console.log(storage);
-//   upload(req, res, err => {
-//     if (err) {
-//       return res.json({ success: false, err });
-//     }
-//     return res.json({
-//       success: true,
-//       // filePath: res.req.file.path,
-//       // fileName: res.req.file.filename,
-//     });
-//   });
-// });
 
 router.post('/', (req, res) => {
   // 받아온 상품 정보를 DB에 저장
