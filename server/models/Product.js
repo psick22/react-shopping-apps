@@ -1,9 +1,10 @@
 const mongoose = require('mongoose');
 
+const Schema = mongoose.Schema;
 const productSchema = mongoose.Schema(
   {
-    wirter: {
-      type: mongoose.Schema.Types.ObjectId,
+    writer: {
+      type: Schema.Types.ObjectId,
       ref: 'User',
     },
     title: {

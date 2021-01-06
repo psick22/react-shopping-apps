@@ -32,7 +32,7 @@ router.post('/image', (req, res) => {
 });
 
 router.post('/', (req, res) => {
-  // 받아온 정보를 DB에 저장
+  // 받아온 상품 정보를 DB에 저장
   const product = new Product(req.body);
   product.save(err => {
     if (err) res.status(400).json({ success: false, err });
@@ -40,4 +40,13 @@ router.post('/', (req, res) => {
   });
 });
 
+router.post('/products', (req, res) => {
+  // DB에 저장된 모든 상품 정보를 불러옴
+  Product.find()
+    .populate('writer')
+    .exec((err, productInfo) => {
+      if (err) return res.status(400).json({ success: false, err });
+      return res.status(200).json({ success: true, productInfo });
+    });
+});
 module.exports = router;

@@ -85,7 +85,7 @@ function UploadProductPage({ user, history }) {
         <TextArea onChange={descriptionChangeHandler} value={Description} />
         <br />
         <br />
-        <label>가격(&)</label>
+        <label>가격($)</label>
         <Input type='number' onChange={priceChangeHandler} value={Price} />
         <br />
         <br />
