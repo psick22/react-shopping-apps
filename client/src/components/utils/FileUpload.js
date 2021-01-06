@@ -12,11 +12,14 @@ function FileUpload({ refreshFunction }) {
     const config = {
       header: { 'content-type': 'multipart/form-data' },
     };
+    console.log(formData);
+
     formData.append('file', files[0]);
+    console.log(formData);
 
     axios.post('/api/product/image', formData, config).then(response => {
       if (response.data.success) {
-        console.log(response.data);
+        console.log(1, response);
         const newImages = [...Images, response.data.filePath];
         setImages(newImages);
         refreshFunction(newImages);
@@ -78,7 +81,7 @@ function FileUpload({ refreshFunction }) {
               height: '240px',
               margin: '0px 20px',
             }}
-            src={`http://localhost:5000/${item}`}
+            src={item}
             onClick={() => onClickDelete(index)}
           />
         ))}
