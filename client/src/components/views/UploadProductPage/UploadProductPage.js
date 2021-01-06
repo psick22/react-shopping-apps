@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Typography, Button, Form, Input, Select } from 'antd';
 import FileUpload from '../../utils/FileUpload';
+import axios from 'axios';
 
 const { Option } = Select;
 const { TextArea } = Input;
@@ -15,12 +16,12 @@ const Continents = [
   { key: 7, value: 'Antarctica' },
 ];
 
-function UploadProductPage() {
+function UploadProductPage({ user, history }) {
   const [Title, setTitle] = useState('');
   const [Description, setDescription] = useState('');
   const [Price, setPrice] = useState(0);
   const [Continent, setContinent] = useState(1);
-  const [Image, setImage] = useState([]);
+  const [Images, setImages] = useState([]);
 
   const titleChangeHandler = e => {
     setTitle(e.currentTarget.value);
@@ -34,15 +35,46 @@ function UploadProductPage() {
   const continentChangeHandler = value => {
     setContinent(value);
   };
+
+  const submitHandler = e => {
+    if (!Title || !Description || !Price || !Continent || !Images) {
+      return alert(' 모든 칸에 입력을 해야합니다.');
+    }
+    const body = {
+      // 로그인 된 사람의 아이디
+      writer: user.userData._id,
+      title: Title,
+      description: Description,
+      price: Price,
+      images: Images,
+      continents: Continents,
+    };
+
+    axios.post('/api/product', body).then(response => {
+      console.log(response);
+
+      if (response.data.success) {
+        alert('상품 업로드 성공');
+        history.push('/');
+      } else {
+        alert('상품 업로드 ');
+      }
+    });
+  };
+  const updateImages = newImages => {
+    console.log(newImages);
+    setImages(newImages);
+    console.log(newImages);
+  };
   return (
     <div style={{ maxWidth: '700px', margin: '2rem auto' }}>
       <div style={{ textAlign: 'center', marginBottom: '2rem' }}>
         <h2> 여행 상품 업로드 </h2>
       </div>
 
-      <Form>
+      <Form onFinish={submitHandler}>
         {/* {Drop Zone/} */}
-        <FileUpload />
+        <FileUpload refreshFunction={updateImages} />
         <br />
         <br />
         <label>이름</label>
@@ -70,7 +102,7 @@ function UploadProductPage() {
         </Select>
         <br />
         <br />
-        <Button type='submit'>확인</Button>
+        <Button htmlType='submit'>확인</Button>
       </Form>
     </div>
   );

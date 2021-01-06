@@ -3,8 +3,9 @@ import Dropzone from 'react-dropzone';
 import { PlusOutlined } from '@ant-design/icons';
 import axios from 'axios';
 
-function FileUpload() {
+function FileUpload({ refreshFunction }) {
   const [Images, setImages] = useState([]);
+
   const dropHandler = files => {
     let formData = new FormData();
 
@@ -16,16 +17,20 @@ function FileUpload() {
     axios.post('/api/product/image', formData, config).then(response => {
       if (response.data.success) {
         console.log(response.data);
-        setImages([...Images, response.data.filePath]);
+        const newImages = [...Images, response.data.filePath];
+        setImages(newImages);
+        refreshFunction(newImages);
       } else {
         alert('파일 저장 실패');
       }
     });
   };
 
-  const onClickDelete = e => {
-    console.log(e.currentTarget);
-    console.log(Images);
+  const onClickDelete = index => {
+    const newImages = [...Images];
+    newImages.splice(index, 1);
+    setImages(newImages);
+    refreshFunction(newImages);
   };
 
   return (
@@ -74,7 +79,7 @@ function FileUpload() {
               margin: '0px 20px',
             }}
             src={`http://localhost:5000/${item}`}
-            onClick={onClickDelete}
+            onClick={() => onClickDelete(index)}
           />
         ))}
       </div>
