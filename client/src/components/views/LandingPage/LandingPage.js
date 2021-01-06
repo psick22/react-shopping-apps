@@ -25,7 +25,7 @@ function LandingPage() {
 
   const renderCards = products.map((product, index) => {
     console.log(product);
-    const path = `http://localhost:5000/${product.images[0]}`;
+    const path = product.images[0];
     return (
       <Col key={index} lg={6} md={8} xs={24}>
         <Card

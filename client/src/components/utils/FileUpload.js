@@ -12,10 +12,8 @@ function FileUpload({ refreshFunction }) {
     const config = {
       header: { 'content-type': 'multipart/form-data' },
     };
-    console.log(formData);
-
     formData.append('file', files[0]);
-    console.log(formData);
+    formData.append('upload_preset', 'fhjlucmt');
 
     axios.post('/api/product/image', formData, config).then(response => {
       if (response.data.success) {
