@@ -52,23 +52,32 @@ router.post('/', (req, res) => {
 });
 
 router.post('/products', (req, res) => {
-  const limit = req.body.limit ? parseInt(req.body.limit) : 100;
+  const limit = req.body.limit ? parseInt(req.body.limit) : 20;
   const skip = req.body.skip ? parseInt(req.body.skip) : 0;
 
+  let findArgs = {};
+
+  for (let category in req.body.filters) {
+    console.log('category', category);
+    if (req.body.filters[category].length > 0) {
+      // 리스트 안에 필터 조건이 있을 때
+      findArgs[category] = req.body.filters[category];
+      console.log('findArgs :', findArgs);
+    }
+  }
+
   // DB에 저장된 모든 상품 정보를 불러옴
-  Product.find()
+  Product.find(findArgs)
     .populate('writer')
     .skip(skip)
     .limit(limit)
     .exec((err, productInfo) => {
       if (err) return res.status(400).json({ success: false, err });
-      return res
-        .status(200)
-        .json({
-          success: true,
-          productInfo: productInfo,
-          postSize: productInfo.length,
-        });
+      return res.status(200).json({
+        success: true,
+        productInfo: productInfo,
+        postSize: productInfo.length,
+      });
     });
 });
 

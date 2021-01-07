@@ -13,6 +13,10 @@ function LandingPage() {
   const [skip, setSkip] = useState(0);
   const [limit, setLimit] = useState(8);
   const [postSize, setPostSize] = useState(0);
+  const [filters, setFilters] = useState({
+    continents: [],
+    price: [],
+  });
 
   useEffect(() => {
     let body = {
@@ -25,7 +29,7 @@ function LandingPage() {
   const getProducts = body => {
     axios.post('/api/product/products', body).then(response => {
       if (response.data.success) {
-        console.log('성공');
+        console.log('데이터 로딩 성공');
         if (body.loadMore) {
           setProducts([...products, ...response.data.productInfo]);
         } else {
@@ -51,7 +55,7 @@ function LandingPage() {
   };
 
   const renderCards = products.map((product, index) => {
-    console.log(product);
+    // console.log(product);
 
     return (
       <Col key={index} lg={6} md={8} xs={24} style={{ padding: '5px' }}>
@@ -64,8 +68,30 @@ function LandingPage() {
       </Col>
     );
   });
+  const showFilteredResults = filter => {
+    // filter 는 {category : [id, id,,,]} 의 오브젝트로 들어옴
+    // 불러온 데이터에서 category 가 해당 id와 일치하는 데이터만 불러옴 (getProducts)
 
-  const onCheckHandler = () => {};
+    let body = {
+      skip: 0,
+      limit: limit,
+      loadMore: false,
+      filters: filter,
+    };
+    setSkip(0);
+    getProducts(body);
+  };
+
+  const handleFilters = (filter, category) => {
+    const newFilters = { ...filters };
+    newFilters[category] = [...filter];
+    console.log('필터', filter);
+    console.log('뉴필터', newFilters);
+
+    showFilteredResults(newFilters);
+
+    setFilters(newFilters);
+  };
 
   return (
     <div style={{ width: '75%', margin: '3rem auto' }}>
@@ -76,7 +102,11 @@ function LandingPage() {
       </div>
       {/* Filter */}
       <div>
-        <Checkbox continents={continents} priceFilter={priceFilter}></Checkbox>
+        <Checkbox
+          continents={continents}
+          priceFilter={priceFilter}
+          handleFilters={filter => handleFilters(filter, 'continents')}
+        ></Checkbox>
       </div>
 
       {/* Search */}

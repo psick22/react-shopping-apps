@@ -62,9 +62,7 @@ function UploadProductPage({ user, history }) {
     });
   };
   const updateImages = newImages => {
-    console.log(newImages);
     setImages(newImages);
-    console.log(newImages);
   };
   return (
     <div style={{ maxWidth: '700px', margin: '2rem auto' }}>

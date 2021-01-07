@@ -17,7 +17,6 @@ function FileUpload({ refreshFunction }) {
 
     axios.post('/api/product/image', formData, config).then(response => {
       if (response.data.success) {
-        console.log(1, response);
         const newImages = [...Images, response.data.filePath];
         setImages(newImages);
         refreshFunction(newImages);
