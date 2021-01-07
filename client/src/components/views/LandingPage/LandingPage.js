@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { FaCode } from 'react-icons/fa';
 import axios from 'axios';
-import { Col, Card, Row, Carousel } from 'antd';
+import { Col, Card, Row, Collapse } from 'antd';
 import { RocketOutlined } from '@ant-design/icons';
 import ImageSlider from '../../utils/ImageSlider';
+import Checkbox from './Sections/Checkbox.js';
+import { continents } from './Sections/Datas';
+
 const { Meta } = Card;
 
 function LandingPage() {
   const [products, setProducts] = useState([]);
   const [skip, setSkip] = useState(0);
   const [limit, setLimit] = useState(8);
+  const [postSize, setPostSize] = useState(0);
 
   useEffect(() => {
     let body = {
@@ -28,6 +31,7 @@ function LandingPage() {
         } else {
           setProducts(response.data.productInfo);
         }
+        setPostSize(response.data.postSize);
       } else {
         alert('상품을 가져오는 것에 실패하였습니다.');
       }
@@ -45,6 +49,7 @@ function LandingPage() {
     getProducts(body);
     setSkip(moreSkip);
   };
+
   const renderCards = products.map((product, index) => {
     console.log(product);
 
@@ -60,6 +65,8 @@ function LandingPage() {
     );
   });
 
+  const onCheckHandler = () => {};
+
   return (
     <div style={{ width: '75%', margin: '3rem auto' }}>
       <div style={{ textAlign: 'center' }}>
@@ -68,12 +75,19 @@ function LandingPage() {
         </h2>
       </div>
       {/* Filter */}
+      <div>
+        <Checkbox list={continents}></Checkbox>
+      </div>
+
       {/* Search */}
       {/* Cards */}
       <Row gutter={(16, 16)}>{renderCards}</Row>
-      <div style={{ display: 'flex', justifyContent: 'center' }}>
-        <button onClick={loadMoreHandler}>더보기</button>
-      </div>
+
+      {postSize >= limit && (
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+          <button onClick={loadMoreHandler}>더보기</button>
+        </div>
+      )}
     </div>
   );
 }
