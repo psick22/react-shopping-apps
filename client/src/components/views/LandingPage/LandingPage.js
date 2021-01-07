@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { FaCode } from 'react-icons/fa';
 import axios from 'axios';
-import { Col, Card, Row } from 'antd';
+import { Col, Card, Row, Carousel } from 'antd';
 import { RocketOutlined } from '@ant-design/icons';
+import ImageSlider from '../../utils/ImageSlider';
 
 const { Meta } = Card;
 
@@ -25,18 +26,9 @@ function LandingPage() {
 
   const renderCards = products.map((product, index) => {
     console.log(product);
-    const path = product.images[0];
     return (
       <Col key={index} lg={6} md={8} xs={24}>
-        <Card
-          cover={
-            <img
-              style={{ width: '100%', maxHeight: '75%' }}
-              alt={index}
-              src={path}
-            />
-          }
-        >
+        <Card cover={<ImageSlider images={product.images} />}>
           <Meta title={product.title} description={`$${product.price}`} />
         </Card>
       </Col>
