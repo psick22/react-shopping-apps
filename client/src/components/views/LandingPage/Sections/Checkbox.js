@@ -3,12 +3,11 @@ import 'antd/dist/antd.css';
 import { Collapse, Checkbox } from 'antd';
 const { Panel } = Collapse;
 
-function CheckBox(props) {
-  const renderCheckbox = () =>
-    props.list &&
-    props.list.map((item, index) => (
-      <React.Fragment key={index}>
-        <Checkbox key={index}>
+function CheckBox({ continents, priceFilter }) {
+  const renderCheckbox = items =>
+    items.map(item => (
+      <React.Fragment key={item._id}>
+        <Checkbox>
           <span>{item.name}</span>
         </Checkbox>
       </React.Fragment>
@@ -18,7 +17,10 @@ function CheckBox(props) {
     <div>
       <Collapse defaultActiveKey={['1']}>
         <Panel header='This is panel header 1' key='1'>
-          {renderCheckbox()}
+          {renderCheckbox(continents)}
+        </Panel>
+        <Panel header='This is panel header 1' key='1'>
+          {renderCheckbox(priceFilter)}
         </Panel>
       </Collapse>
     </div>

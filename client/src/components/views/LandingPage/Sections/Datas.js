@@ -17,4 +17,4 @@ const priceFilter = [
   { _id: 6, name: 'Any' },
 ];
 
-export { continents };
+export { continents, priceFilter };

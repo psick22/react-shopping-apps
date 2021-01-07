@@ -4,7 +4,7 @@ import { Col, Card, Row, Collapse } from 'antd';
 import { RocketOutlined } from '@ant-design/icons';
 import ImageSlider from '../../utils/ImageSlider';
 import Checkbox from './Sections/Checkbox.js';
-import { continents } from './Sections/Datas';
+import { continents, priceFilter } from './Sections/Datas';
 
 const { Meta } = Card;
 
@@ -76,7 +76,7 @@ function LandingPage() {
       </div>
       {/* Filter */}
       <div>
-        <Checkbox list={continents}></Checkbox>
+        <Checkbox continents={continents} priceFilter={priceFilter}></Checkbox>
       </div>
 
       {/* Search */}
