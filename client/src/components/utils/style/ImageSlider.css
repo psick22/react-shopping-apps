@@ -1,0 +1,6 @@
+@import '~antd/dist/antd.css';
+
+.ant-carousel .slick-dots li button {
+  background-color: rgb(49, 109, 165);
+  opacity: 0.5;
+}

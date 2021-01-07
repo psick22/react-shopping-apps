@@ -1,5 +1,6 @@
 import React from 'react';
 import { Carousel } from 'antd';
+import './style/ImageSlider.css';
 
 function ImageSlider({ images }) {
   console.log(images);
@@ -11,7 +12,7 @@ function ImageSlider({ images }) {
             <div key={index}>
               {console.log(image)}
               <img
-                style={{ width: '100%', maxHeight: '75%' }}
+                style={{ width: '100%', height: '200px' }}
                 src={image}
                 alt={index}
               />
