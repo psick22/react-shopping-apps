@@ -29,6 +29,7 @@ const productSchema = mongoose.Schema(
     },
     views: {
       type: Number,
+      maxlength: 100,
       default: 1,
     },
     continents: {
