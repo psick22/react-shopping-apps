@@ -3,7 +3,7 @@ import 'antd/dist/antd.css';
 import { Collapse, Checkbox } from 'antd';
 const { Panel } = Collapse;
 
-function CheckBox({ continents, priceFilter, handleFilters }) {
+function CheckBox({ continents, handleFilters }) {
   const [checked, setChecked] = useState([]);
 
   // 체크가 되면 checked state의 리스트에 올림

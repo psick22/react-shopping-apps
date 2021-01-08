@@ -4,7 +4,9 @@ import { Col, Card, Row, Collapse } from 'antd';
 import { RocketOutlined } from '@ant-design/icons';
 import ImageSlider from '../../utils/ImageSlider';
 import Checkbox from './Sections/Checkbox.js';
-import { continents, priceFilter } from './Sections/Datas';
+import Radiobox from './Sections/Radiobox.js';
+import Searchbox from './Sections/Searchbox.js';
+import { continents, price } from './Sections/Datas';
 
 const { Meta } = Card;
 
@@ -17,6 +19,7 @@ function LandingPage() {
     continents: [],
     price: [],
   });
+  const [searchInput, setSearchInput] = useState('');
 
   useEffect(() => {
     let body = {
@@ -84,13 +87,32 @@ function LandingPage() {
 
   const handleFilters = (filter, category) => {
     const newFilters = { ...filters };
+    console.log('newFilters', newFilters);
     newFilters[category] = [...filter];
+    console.log('newFilters, price필터 추가', newFilters);
+
     console.log('필터', filter);
     console.log('뉴필터', newFilters);
 
     showFilteredResults(newFilters);
 
     setFilters(newFilters);
+  };
+
+  const doSearch = string => {
+    console.log('doSearch :', string);
+    const newSearchInput = string;
+    console.log('state) searchInput :', searchInput);
+    let body = {
+      skip: 0,
+      limit: limit,
+      filters: filters,
+      searchString: newSearchInput,
+    };
+    setSkip(0);
+    setSearchInput(newSearchInput);
+
+    getProducts(body);
   };
 
   return (
@@ -101,15 +123,25 @@ function LandingPage() {
         </h2>
       </div>
       {/* Filter */}
-      <div>
-        <Checkbox
-          continents={continents}
-          priceFilter={priceFilter}
-          handleFilters={filter => handleFilters(filter, 'continents')}
-        ></Checkbox>
-      </div>
+      <Row gutter={[16, 16]}>
+        <Col lg={12} xs={24}>
+          <Checkbox
+            continents={continents}
+            handleFilters={filter => handleFilters(filter, 'continents')}
+          ></Checkbox>
+        </Col>
+        <Col lg={12} xs={24}>
+          <Radiobox
+            price={price}
+            handleFilters={filter => handleFilters(filter, 'price')}
+          ></Radiobox>
+        </Col>
+      </Row>
 
       {/* Search */}
+
+      <Searchbox doSearch={string => doSearch(string)}></Searchbox>
+
       {/* Cards */}
       <Row gutter={(16, 16)}>{renderCards}</Row>
 

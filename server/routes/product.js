@@ -61,24 +61,51 @@ router.post('/products', (req, res) => {
     console.log('category', category);
     if (req.body.filters[category].length > 0) {
       // 리스트 안에 필터 조건이 있을 때
-      findArgs[category] = req.body.filters[category];
-      console.log('findArgs :', findArgs);
+      if (category === 'price') {
+        findArgs[category] = {
+          //$gte: greater than equal, $lte: less than equal
+          // mongo DB 명령어
+          $gte: req.body.filters[category][0].minPrice,
+          $lte: req.body.filters[category][0].maxPrice,
+        };
+      } else {
+        findArgs[category] = req.body.filters[category];
+      }
     }
+    console.log('findArgs :', findArgs);
   }
+  //search 가 있다면
 
-  // DB에 저장된 모든 상품 정보를 불러옴
-  Product.find(findArgs)
-    .populate('writer')
-    .skip(skip)
-    .limit(limit)
-    .exec((err, productInfo) => {
-      if (err) return res.status(400).json({ success: false, err });
-      return res.status(200).json({
-        success: true,
-        productInfo: productInfo,
-        postSize: productInfo.length,
+  if (req.body.searchString) {
+    console.log(req.body.searchString);
+    Product.find(findArgs)
+      .find({ $text: { $search: req.body.searchString } })
+      .populate('writer')
+      .skip(skip)
+      .limit(limit)
+      .exec((err, productInfo) => {
+        if (err) return res.status(400).json({ success: false, err });
+        return res.status(200).json({
+          success: true,
+          productInfo: productInfo,
+          postSize: productInfo.length,
+        });
       });
-    });
+  } else {
+    // DB에 저장된 모든 상품 정보를 불러옴
+    Product.find(findArgs)
+      .populate('writer')
+      .skip(skip)
+      .limit(limit)
+      .exec((err, productInfo) => {
+        if (err) return res.status(400).json({ success: false, err });
+        return res.status(200).json({
+          success: true,
+          productInfo: productInfo,
+          postSize: productInfo.length,
+        });
+      });
+  }
 });
 
 module.exports = router;
