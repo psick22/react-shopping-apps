@@ -8,6 +8,7 @@ import RegisterPage from './views/RegisterPage/RegisterPage.js';
 import NavBar from './views/NavBar/NavBar';
 import UploadProductPage from './views/UploadProductPage/UploadProductPage.js';
 import Footer from './views/Footer/Footer';
+import DetailProductPage from './views/DetailProductPage/DetailProductPage';
 
 //null   Anyone Can go inside
 //true   only logged in user can go inside
@@ -27,11 +28,23 @@ function App() {
             path='/product/upload'
             component={Auth(UploadProductPage, true)}
           />
+          <Route
+            exact
+            path='/product/:productID'
+            component={Auth(DetailProductPage, null)}
+          />
         </Switch>
       </div>
       <Footer />
     </Suspense>
   );
 }
+
+// Routing 한 컴포넌트들은 props로 history, location, match 라는 3가지 데이터를 전달 받음
+// React Route를 이용할때 Route path에 '/:parameter이름' 을 추가하면
+// 이 정보는 해당 컴포넌트의 props.match.params 에 접근하여 불러올수 있음
+
+// 이것은 LandingPage 에서 링크를 걸때 입력했던 <a href={`/product/${product._id}`}>
+// product._id 변수값을 props.match.params.productID 에 담아서 전달함
 
 export default App;

@@ -19,7 +19,13 @@ function Searchbox({ doSearch }) {
     setInput(newInput);
   };
   return (
-    <div>
+    <div
+      style={{
+        display: 'flex',
+        justifyContent: 'flex-end',
+        margin: '0.5rem auto',
+      }}
+    >
       <Search
         placeholder='input search text'
         allowClear
@@ -28,6 +34,7 @@ function Searchbox({ doSearch }) {
         value={input}
         onChange={e => onChangeHandler(e)}
         onSearch={onSearch}
+        style={{ width: 300 }}
       />
     </div>
   );

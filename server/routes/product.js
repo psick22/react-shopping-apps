@@ -108,4 +108,19 @@ router.post('/products', (req, res) => {
   }
 });
 
+router.get('/products_by_id', (req, res) => {
+  // productID를 이용해서 DB에서 일치하는 상품의 정보를 불러옴
+
+  // query로 전달했기 때문에 req.body 가 아닌 req.query
+
+  let type = req.query.type;
+  let productID = req.query.id;
+  Product.find({ _id: productID })
+    .populate('writer')
+    .exec((err, product) => {
+      if (err) return res.status(400).send({ success: false, err: err });
+      return res.status(200).send({ success: true, product: product });
+    });
+});
+
 module.exports = router;
