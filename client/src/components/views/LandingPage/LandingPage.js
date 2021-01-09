@@ -58,7 +58,7 @@ function LandingPage() {
   };
 
   const renderCards = products.map((product, index) => {
-    // console.log(product);
+    // console.log('product:', product);
 
     return (
       <Col key={index} lg={6} md={8} xs={24} style={{ padding: '5px' }}>

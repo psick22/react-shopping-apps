@@ -2,14 +2,26 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import ImageGallery from 'react-image-gallery';
 import { Row, Col, Descriptions, Badge, Button } from 'antd';
+import { useDispatch } from 'react-redux';
+import { addToCart } from '../../../_actions/user_actions';
 
 function DetailProductPage({ match }) {
+  const dispatch = useDispatch();
+
   const [product, setProduct] = useState({});
   const [images, setImages] = useState([]);
 
   const productID = match.params.productID;
+
   const onClickHandler = e => {
-    console.log(e.currentTarget);
+    // Add to Cart 버튼을 클릭하면 필요한 정보를 user 데이터스키마에 전달 (cart와 histroy 필드)
+    // 상품 아이디, 갯수, 넣은 날짜
+    // user 스키마에 관련 된 것은 redux를 이용했기 때문에 이 부분도 redux로 처리
+    console.log(e);
+    console.log('product._id:', product._id);
+
+    // useDispatch로 액션을 실행하며 상품 아이디를 전달
+    dispatch(addToCart(product._id));
   };
 
   useEffect(() => {
