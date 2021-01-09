@@ -5,6 +5,8 @@ import { getCartItems } from '../../../_actions/user_actions';
 function CartPage(props) {
   const dispatch = useDispatch();
 
+  // TODO 스토어 안쓰는 방법 해보기
+
   useEffect(() => {
     let cartItems = [];
 
