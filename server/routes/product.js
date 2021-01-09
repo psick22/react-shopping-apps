@@ -112,15 +112,33 @@ router.get('/products_by_id', (req, res) => {
   // productID를 이용해서 DB에서 일치하는 상품의 정보를 불러옴
 
   // query로 전달했기 때문에 req.body 가 아닌 req.query
-
+  console.log('req.query.id', req.query);
   let type = req.query.type;
-  let productID = req.query.id;
-  Product.find({ _id: productID })
+  let productIds = req.query.id;
+  console.log('productIds', productIds);
+
+  if (type === 'array') {
+    // NOTE
+    // id=123kl123,1513k5jl135,13j1i35 형태로 오는 것을
+    // productIds = ['123kl123','1513k5jl135,'13j1i35] 형태로 바꿔줌
+
+    let ids = req.query.id.split(',');
+    console.log('ids', ids);
+
+    productIds = ids.map(item => {
+      return item;
+    });
+    console.log('productIds', productIds);
+  }
+
+  Product.find({ _id: { $in: productIds } })
     .populate('writer')
     .exec((err, product) => {
-      if (err) return res.status(400).send({ success: false, err: err });
-      return res.status(200).send({ success: true, product: product });
+      if (err) return res.status(400).json({ success: false, err: err });
+      return res.status(200).json({ success: true, product: product });
     });
 });
 
 module.exports = router;
+
+// .get(`/api/product/products_by_id?id=${cartItems}&type=array`, body)

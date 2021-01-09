@@ -1,4 +1,4 @@
-@import "~antd/dist/antd.css";
+@import '~antd/dist/antd.css';
 
 .menu {
   padding: 0 20px;
@@ -9,7 +9,6 @@
 }
 
 .menu__logo {
-  width: 150px;
   float: left;
 }
 
@@ -33,12 +32,11 @@
 }
 
 .menu__container .ant-menu-horizontal {
-  padding: 10px 0px;
+  padding: 12px 0px;
   border-bottom: none;
   font-size: 16px;
   font-weight: 600;
 }
-
 .menu__container .menu_left {
   float: left;
 }
@@ -58,6 +56,10 @@
 
 .menu_drawer .ant-drawer-body {
   padding: 0 !important;
+}
+.ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-item,
+.ant-menu-horizontal:not(.ant-menu-dark) > .ant-menu-submenu {
+  margin: 0 2px;
 }
 
 /* align header of Drawer with header of page */
