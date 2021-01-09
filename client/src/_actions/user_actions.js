@@ -84,8 +84,9 @@ export function getCartItems(cartItems, userCart) {
           }
         });
       });
+      console.log('response.data :', response.data);
 
-      return response.data;
+      return response.data.product;
     });
 
   return {
