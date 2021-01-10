@@ -25,19 +25,16 @@ function UserCartBlocks(props) {
         <td>{product.quantity} EA</td>
         <td> $ {product.price}</td>
         <td>
-          <button>Remove</button>
+          <button onClick={() => props.removeItem(product._id)}>Remove</button>
         </td>
       </tr>
     ));
   const calculateTotal = () => {
     console.log(props.products);
-
-    const sum = props.products.map(product => product.price * product.quantity);
-    console.log('sum:', sum);
-    const total = sum.reduce(function (a, b) {
-      return a + b;
-    }, 0);
-    console.log('total:', total);
+    let total = 0;
+    props.products.map(product => {
+      total += parseInt(product.price, 10) * product.quantity;
+    });
 
     return total;
   };
@@ -55,7 +52,9 @@ function UserCartBlocks(props) {
 
         <tbody>{props.products && renderItems()}</tbody>
       </table>
-      <div>총액 : {props.products && calculateTotal()}</div>
+      <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <h1>총액 : {props.products && calculateTotal()}</h1>
+      </div>
     </div>
   );
 }

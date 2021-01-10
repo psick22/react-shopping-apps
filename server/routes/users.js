@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { User } = require('../models/User');
+const { Product } = require('../models/Product');
 
 const { auth } = require('../middleware/auth');
 
@@ -128,6 +129,35 @@ router.post('/addToCart', auth, (req, res) => {
           );
         }
       }
+    },
+  );
+});
+
+// req.query.id = productId
+
+router.get('/removeFromCart', auth, (req, res) => {
+  // auth 에서 user 아이디 (req.user._id) 를 받아서 DB에서 이 아이디와 일치하는 유저를 찾고
+  // 유저의 cart 정보에서 받아온 productId와 일치하는 정보를 삭제
+
+  User.findOneAndUpdate(
+    { _id: req.user._id },
+    { $pull: { cart: { id: req.query.id } } },
+    { new: true },
+    (err, userInfo) => {
+      // cartDetail 스토어의 정보도 리프레쉬해야하기 때문에
+      // product collection 에서 남아있는 상품 정보를 다시 가져와야함
+      let cart = userInfo.cart;
+      let array = cart.map(item => {
+        return item.id;
+      });
+
+      Product.find({ _id: { $in: array } })
+        .populate('writer')
+        .exec((err, productInfo) => {
+          return res
+            .status(200)
+            .json({ success: true, productInfo: productInfo, cart: cart });
+        });
     },
   );
 });

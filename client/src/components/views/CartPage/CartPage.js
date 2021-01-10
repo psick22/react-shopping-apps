@@ -1,10 +1,16 @@
 import React, { useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import { getCartItems } from '../../../_actions/user_actions';
+import { getCartItems, removeCartItem } from '../../../_actions/user_actions';
 import UserCartBlocks from './Sections/UserCartBlocks';
 
 function CartPage(props) {
   const dispatch = useDispatch();
+
+  const removeItem = productId => {
+    console.log('remove', productId);
+    console.log(props.userData);
+    dispatch(removeCartItem(productId)).then(response => {});
+  };
 
   useEffect(() => {
     let cartItems = [];
@@ -25,7 +31,10 @@ function CartPage(props) {
     <div style={{ width: '85%', margin: '3rem auto' }}>
       <h1>장바구니</h1>
       <div>
-        <UserCartBlocks products={props.user.cartDetail} />
+        <UserCartBlocks
+          products={props.user.cartDetail}
+          removeItem={removeItem}
+        />
       </div>
     </div>
   );
