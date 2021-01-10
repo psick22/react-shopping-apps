@@ -162,4 +162,14 @@ router.get('/removeFromCart', auth, (req, res) => {
   );
 });
 
+router.post('/successBuy', auth, (req, res) => {
+  // NOTE 1. user collection 의 history 필드에 간단한 결제 정보 넣어줌
+  let history = [];
+  let transactionData = {};
+  req.body.cartDetail;
+
+  // NOTE 2. payment collection 에 결제 상세 정보 넣어줌
+  // NOTE 3. product collection 의 sold 필드 정보 업데이트 (quantity 만큼 increase)
+});
+
 module.exports = router;
