@@ -28,25 +28,18 @@ function DetailProductPage({ match }) {
     axios
       .get(`/api/product/products_by_id?id=${productID}&type=single`)
       .then(response => {
-        if (response.data.success) {
-          console.log(
-            '상세 정보 가져오기 성공 - product[0] :',
-            response.data.product[0],
-          );
-          setProduct(response.data.product[0]);
-          const newImage = response.data.product[0].images;
-          const imageList = newImage.map(image => {
-            const obj = {
-              original: image,
-              thumbnail: image,
-            };
-            return obj;
-          });
-          setImages(imageList);
-        } else {
-          alert('상세 정보 가져오기를 실패하였습니다.');
-        }
-      });
+        setProduct(response.data[0]);
+        const newImage = response.data[0].images;
+        const imageList = newImage.map(image => {
+          const obj = {
+            original: image,
+            thumbnail: image,
+          };
+          return obj;
+        });
+        setImages(imageList);
+      })
+      .catch(err => alert(err));
   }, []);
 
   console.log('state:', images);
