@@ -4,6 +4,7 @@ import { Empty } from 'antd';
 import { useDispatch } from 'react-redux';
 import { getCartItems, removeCartItem } from '../../../_actions/user_actions';
 import UserCartBlocks from './Sections/UserCartBlocks';
+import Paypal from '../../utils/Paypal';
 
 function CartPage(props) {
   const dispatch = useDispatch();
@@ -64,11 +65,12 @@ function CartPage(props) {
 
       {showTotal ? (
         <div style={{ display: 'flex', justifyContent: 'center' }}>
-          <h1>총액 : {total}</h1>
+          <h1>총액 : $ {total}</h1>
         </div>
       ) : (
         <Empty />
       )}
+      {showTotal && <Paypal total={total} />}
     </div>
   );
 }
