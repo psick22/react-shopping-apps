@@ -29,15 +29,7 @@ function UserCartBlocks(props) {
         </td>
       </tr>
     ));
-  const calculateTotal = () => {
-    console.log(props.products);
-    let total = 0;
-    props.products.map(product => {
-      total += parseInt(product.price, 10) * product.quantity;
-    });
 
-    return total;
-  };
   return (
     <div>
       <table>
@@ -52,9 +44,6 @@ function UserCartBlocks(props) {
 
         <tbody>{props.products && renderItems()}</tbody>
       </table>
-      <div style={{ display: 'flex', justifyContent: 'center' }}>
-        <h1>총액 : {props.products && calculateTotal()}</h1>
-      </div>
     </div>
   );
 }

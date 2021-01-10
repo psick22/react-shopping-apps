@@ -1,15 +1,36 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { Empty } from 'antd';
+
 import { useDispatch } from 'react-redux';
 import { getCartItems, removeCartItem } from '../../../_actions/user_actions';
 import UserCartBlocks from './Sections/UserCartBlocks';
 
 function CartPage(props) {
   const dispatch = useDispatch();
+  const [total, setTotal] = useState(0);
+  const [showTotal, setShowTotal] = useState(false);
 
   const removeItem = productId => {
     console.log('remove', productId);
     console.log(props.userData);
-    dispatch(removeCartItem(productId)).then(response => {});
+
+    dispatch(removeCartItem(productId)).then(response => {
+      console.log('response', response);
+      if (response.payload.productInfo.length <= 0) {
+        setShowTotal(false);
+      }
+    });
+  };
+
+  const calculateTotal = cartDetail => {
+    let sum = 0;
+    cartDetail.map(product => {
+      sum += parseInt(product.price, 10) * product.quantity;
+    });
+    setTotal(sum);
+    setShowTotal(true);
+
+    return total;
   };
 
   useEffect(() => {
@@ -22,7 +43,11 @@ function CartPage(props) {
           cartItems.push(item.id);
         });
         console.log('cartItems', cartItems);
-        dispatch(getCartItems(cartItems, props.user.userData.cart));
+        dispatch(getCartItems(cartItems, props.user.userData.cart)).then(
+          response => {
+            calculateTotal(response.payload);
+          },
+        );
       }
     }
   }, [props.user.userData]);
@@ -36,6 +61,14 @@ function CartPage(props) {
           removeItem={removeItem}
         />
       </div>
+
+      {showTotal ? (
+        <div style={{ display: 'flex', justifyContent: 'center' }}>
+          <h1>총액 : {total}</h1>
+        </div>
+      ) : (
+        <Empty />
+      )}
     </div>
   );
 }
