@@ -2,8 +2,10 @@ const express = require('express');
 const router = express.Router();
 const { User } = require('../models/User');
 const { Product } = require('../models/Product');
+const { Payment } = require('../models/Payment');
 
 const { auth } = require('../middleware/auth');
+const async = require('async');
 
 //=================================
 //             User
@@ -20,7 +22,7 @@ router.get('/auth', auth, (req, res) => {
     role: req.user.role,
     image: req.user.image,
     cart: req.user.cart,
-    hitstory: req.user.history,
+    history: req.user.history,
   });
 });
 
@@ -166,10 +168,71 @@ router.post('/successBuy', auth, (req, res) => {
   // NOTE 1. user collection 의 history 필드에 간단한 결제 정보 넣어줌
   let history = [];
   let transactionData = {};
-  req.body.cartDetail;
+
+  req.body.cartDetail.forEach(item => {
+    history.push({
+      dateOfPurchase: Date.now(),
+      name: item.title,
+      id: item._id,
+      price: item.price,
+      quantity: item.quantity,
+      paymentId: req.body.paymentData.paymentID,
+    });
+  });
 
   // NOTE 2. payment collection 에 결제 상세 정보 넣어줌
-  // NOTE 3. product collection 의 sold 필드 정보 업데이트 (quantity 만큼 increase)
+
+  transactionData.user = {
+    id: req.user._id,
+    name: req.user.name,
+    email: req.user.email,
+  };
+
+  transactionData.data = req.body.paymentData;
+  transactionData.product = history;
+
+  // history 정보 저장
+  User.findOneAndUpdate(
+    { _id: req.user._id },
+    { $push: { history: history }, $set: { cart: [] } },
+    { new: true },
+    (err, userInfo) => {
+      if (err) return res.status(400).json({ success: false, err });
+      // payment 에 transaction 정보 저장
+      const payment = new Payment(transactionData);
+
+      payment.save((err, doc) => {
+        if (err) return res.status(400).json({ success: false, err });
+        // NOTE 3. product collection 의 sold 필드 정보 업데이트 (quantity 만큼 increase)
+        // 따라서, 상품당 몇개의 quantity를 샀는지 정보가 필요함 (product[index].quantity)
+
+        const products = doc.product.map(item => {
+          return {
+            id: item.id,
+            quantity: item.quantity,
+          };
+        });
+
+        async.eachSeries(
+          products,
+          (item, callback) => {
+            Product.update(
+              { _id: item.id },
+              { $inc: { sold: item.quantity } },
+              { new: false },
+              callback,
+            );
+          },
+          err => {
+            if (err) return res.status(400).json({ success: false, err });
+            res
+              .status(200)
+              .json({ success: true, cart: userInfo.cart, cartDetail: [] });
+          },
+        );
+      });
+    },
+  );
 });
 
 module.exports = router;

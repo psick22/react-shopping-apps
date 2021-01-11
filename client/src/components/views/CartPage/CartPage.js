@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Empty } from 'antd';
+import { Empty, Result, Button } from 'antd';
 
 import { useDispatch } from 'react-redux';
 import {
@@ -14,6 +14,7 @@ function CartPage(props) {
   const dispatch = useDispatch();
   const [total, setTotal] = useState(0);
   const [showTotal, setShowTotal] = useState(false);
+  const [showSuccess, setshowSuccess] = useState(false);
 
   const removeItem = productId => {
     console.log('remove', productId);
@@ -44,8 +45,9 @@ function CartPage(props) {
         cartDetail: props.user.cartDetail,
       }),
     ).then(response => {
-      if (response.data.success) {
+      if (response.payload.success) {
         setShowTotal(false);
+        setshowSuccess(true);
       }
     });
   };
@@ -83,6 +85,8 @@ function CartPage(props) {
         <div style={{ display: 'flex', justifyContent: 'center' }}>
           <h1>총액 : $ {total}</h1>
         </div>
+      ) : showSuccess ? (
+        <Result status='success' title='Successfully Purchased Items' />
       ) : (
         <Empty />
       )}

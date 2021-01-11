@@ -10,6 +10,7 @@ import UploadProductPage from './views/UploadProductPage/UploadProductPage.js';
 import Footer from './views/Footer/Footer';
 import DetailProductPage from './views/DetailProductPage/DetailProductPage';
 import CartPage from './views/CartPage/CartPage';
+import HistoryPage from './views/HistoryPage/HistoryPage';
 
 //null   Anyone Can go inside
 //true   only logged in user can go inside
@@ -35,6 +36,11 @@ function App() {
             component={Auth(DetailProductPage, null)}
           />
           <Route exact path='/user/cart' component={Auth(CartPage, true)} />
+          <Route
+            exact
+            path='/user/history'
+            component={Auth(HistoryPage, true)}
+          />
         </Switch>
       </div>
       <Footer />
